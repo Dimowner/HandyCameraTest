@@ -1,6 +1,7 @@
 package test.example.handycamera;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import test.example.handycamera.data.ImageItem;
+import test.example.handycamera.data.ImagesDataSource;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
@@ -39,7 +41,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
-		ImageView mImageView = (ImageView) findViewById(R.id.image_preview_photo);
+		mImageView = (ImageView) findViewById(R.id.image_preview_photo);
 		mAttacher = new PhotoViewAttacher(mImageView);
 
 		if (savedInstanceState == null) {
@@ -65,8 +67,8 @@ public class ImagePreviewActivity extends AppCompatActivity {
 	}
 
 	private void buildActivity(Intent data) {
-		if (data.hasExtra(GalleryFragment.EXTRAS_KEY_IMAGE)) {
-			mImage = data.getParcelableExtra(GalleryFragment.EXTRAS_KEY_IMAGE);
+		if (data.hasExtra(ImageItem.EXTRAS_KEY_IMAGE)) {
+			mImage = data.getParcelableExtra(ImageItem.EXTRAS_KEY_IMAGE);
 			mImageView.setImageBitmap(mImage.getImg());
 			Log.v("ImagePreviewActivity", mImage.toString());
 			getSupportActionBar().setTitle(mImage.getTitle());
@@ -96,7 +98,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_delete, menu);
+		getMenuInflater().inflate(R.menu.menu_edit_delete, menu);
 		return true;
 	}
 
@@ -108,6 +110,11 @@ public class ImagePreviewActivity extends AppCompatActivity {
 				return true;
 			case R.id.action_delete:
 				//TODO: delete mImage from device and database!
+				//TODO: Async deletion;
+//				ImagesDataSource dataSource = ImagesDataSource.getInstance(getApplicationContext());
+//				dataSource.deleteImage(mImage.getId());
+				new DeleteImageTask().execute(mImage.getId());
+
 				return true;
 			case R.id.action_edit:
 				Intent intent = new Intent(getApplicationContext(), ImageEditActivity.class);
@@ -127,6 +134,21 @@ public class ImagePreviewActivity extends AppCompatActivity {
 			if (requestCode == REQUEST_CODE_EDIT) {
 				buildActivity(data);
 			}
+		}
+	}
+
+	public class DeleteImageTask extends AsyncTask<Long, Void, Void> {
+		@Override
+		protected Void doInBackground(Long... ids) {
+			ImagesDataSource dataSource = ImagesDataSource.getInstance(getApplicationContext());
+			dataSource.deleteImage(ids[0]);
+			return null;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			finish();
 		}
 	}
 }

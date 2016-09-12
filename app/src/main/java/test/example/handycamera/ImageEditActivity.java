@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import test.example.handycamera.data.ImageItem;
+import test.example.handycamera.data.ImagesDataSource;
 
 /**
  * Created on 10.09.2016.
@@ -81,11 +83,17 @@ public class ImageEditActivity extends AppCompatActivity {
 			case R.id.action_accept:
 				if (mEtTitle.getText().length() > 0) {
 					mImage.setmTitle(mEtTitle.getText().toString());
-					writeImageToDB();
-					Intent intent = new Intent();
-					intent.putExtra(ImageItem.EXTRAS_KEY_IMAGE, mImage);
-					setResult(RESULT_OK);
-					finish();
+					new SaveImageTask().execute(mImage);
+//					writeImageToDB();
+//					Intent intent = new Intent();
+//					intent.putExtra(ImageItem.EXTRAS_KEY_IMAGE, mImage);
+//					ImagesDataSource dataSource = ImagesDataSource.getInstance(getApplicationContext());
+//					dataSource.saveImage(mImage);
+////					TODO: request permission write
+//					//TODO: async seving
+//
+//					setResult(RESULT_OK);
+//					finish();
 
 				} else {
 //					TODO: fix string
@@ -98,11 +106,11 @@ public class ImageEditActivity extends AppCompatActivity {
 		}
 	}
 
-	private void writeImageToDB() {
+//	private void writeImageToDB() {
 		//					intent.setAction(action);
 //					intent.putExtra(ExercisesActivity.EXTRAS_KEY_EXERCISES, updateExercise(mExercise));
 //					setResult(RESULT_OK, intent);
-	}
+//	}
 
 
 	/**
@@ -128,5 +136,22 @@ public class ImageEditActivity extends AppCompatActivity {
 			Toast.makeText(getApplicationContext(), "Not enough memory!", Toast.LENGTH_LONG);
 		}
 		return null;
+	}
+
+
+	public class SaveImageTask extends AsyncTask<ImageItem, Void, Void> {
+		@Override
+		protected Void doInBackground(ImageItem... items) {
+			ImagesDataSource dataSource = ImagesDataSource.getInstance(getApplicationContext());
+			dataSource.saveImage(items[0]);
+			return null;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			setResult(RESULT_OK);
+			finish();
+		}
 	}
 }

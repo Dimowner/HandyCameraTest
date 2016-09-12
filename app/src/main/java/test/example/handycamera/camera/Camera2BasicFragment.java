@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.example.handycamera;
+package test.example.handycamera.camera;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -71,6 +71,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+
+import test.example.handycamera.R;
 
 @TargetApi(21)
 public class Camera2BasicFragment extends Fragment

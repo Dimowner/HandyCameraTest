@@ -1,7 +1,9 @@
-package test.example.handycamera;
+package test.example.handycamera.camera;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import test.example.handycamera.R;
 
 /**
  * Created on 10.09.2016.

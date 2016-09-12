@@ -11,15 +11,16 @@
 		android:id="@+id/grid_item_img"
 		android:layout_width="match_parent"
 		android:layout_height="120dp"
+		android:scaleType="centerCrop"
 		android:layout_gravity="center_vertical|center_horizontal"/>
 
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:singleLine="true"
-		android:text="Text"
 		android:layout_gravity="bottom"
 		android:padding="@dimen/keyline_1_minus_8dp"
+		android:textColor="@android:color/holo_red_dark"
 		android:id="@+id/grid_item_title"/>
 
 </FrameLayout>

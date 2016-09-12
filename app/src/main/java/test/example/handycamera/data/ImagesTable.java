@@ -19,11 +19,11 @@ public class ImagesTable {
 		Log.d(LOG_TAG, "Upgrading database from version "
 				+ oldVersion + " to " + newVersion
 				+ ", which will destroy all old data");
-		database.execSQL("DROP TABLE IF EXISTS " + TABLE_IMAGES);
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
 	}
 
 	/** Table name */
-	public static final String TABLE_IMAGES = "images";
+	public static final String TABLE_NAME = "images";
 
 	/** Table fields names */
 	public static final String COLUMN_ID = "_id";
@@ -32,7 +32,7 @@ public class ImagesTable {
 
 	/** Creation script for table Images. */
 	private static final String DATABASE_CREATE_IMAGES_TABLE_SCRIPT =
-			"CREATE TABLE " + TABLE_IMAGES + " ("
+			"CREATE TABLE " + TABLE_NAME + " ("
 					+ COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 					+ COLUMN_TITLE + " TEXT NOT NULL, "
 					+ COLUMN_IMG_LOCATION + " TEXT NOT NULL);";
