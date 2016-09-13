@@ -1,11 +1,16 @@
 package test.example.handycamera.gallery;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,9 +27,9 @@ import test.example.handycamera.util.FileUtil;
 
 public class GalleryActivity extends AppCompatActivity {
 
-	//TODO: don't put big bitmaps into extras!!!
-
 	private static final int REQUEST_CODE_MAKE_PHOTO = 1;
+
+	private static final int REQUEST_WRITE_PERMISSION = 2;
 
 	public static final String IMAGES_FOLDER_NAME = "HandyCamera";
 
@@ -61,7 +66,7 @@ public class GalleryActivity extends AppCompatActivity {
 	}
 
 	private void makePhoto() {
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 			runCameraActivityLollipop();
 		} else{
 			runCameraActivityPreLollipop();
@@ -77,30 +82,12 @@ public class GalleryActivity extends AppCompatActivity {
 				case REQUEST_CODE_MAKE_PHOTO:
 					//Open edit ImageEditActivity with camera results.
 					Intent intent = new Intent(getApplicationContext(), ImageEditActivity.class);
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+					if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+						intent.putExtra(MediaStore.EXTRA_OUTPUT, data.getStringExtra(MediaStore.EXTRA_OUTPUT));
+					} else {
+						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri.getPath());
+					}
 					startActivity(intent);
-//					if (data != null) {
-//						//Get bitmap from file;
-//						Bitmap image = null;
-//						FileInputStream stream;
-//						try {
-//							File f = new File(imageUri.getPath());
-//							stream = new FileInputStream(f);
-//							if (!f.delete()) {
-//								Log.e(LOG_TAG, "Image file uri:" + imageUri.getPath() + " failed to delete");
-//							}
-//							BitmapFactory.Options options = new BitmapFactory.Options();
-//							options.inPreferredConfig = Bitmap.Config.RGB_565;
-//							options.inJustDecodeBounds = false;
-//							image = BitmapFactory.decodeStream(stream , null, options);
-//						} catch (FileNotFoundException e) {
-//							Log.e(LOG_TAG, "", e);
-//						} catch (OutOfMemoryError e) {
-//							Log.e(LOG_TAG, "", e);
-//						}
-////						operateWithCameraResults(image);
-//						Log.v(LOG_TAG, "Operate With camera results");
-//					}
 					break;
 			}
 		}
@@ -115,19 +102,23 @@ public class GalleryActivity extends AppCompatActivity {
 	}
 
 	private void runCameraActivityLollipop() {
-		startActivityForResult(new Intent(this, CameraActivity.class), REQUEST_CODE_MAKE_PHOTO);
+		if (ContextCompat.checkSelfPermission(GalleryActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				!= PackageManager.PERMISSION_GRANTED) {
+			requestWritePermission();
+		} else {
+			Log.v(LOG_TAG, "Has permission");
+			startActivityForResult(new Intent(this, CameraActivity.class), REQUEST_CODE_MAKE_PHOTO);
+		}
 	}
 
 	/**
-	 * Получить путь к файлу в формате Uri.
-	 * @return Путь к файлу.
+	 * Get Uri for image file.
+	 * @return Uri.
 	 */
 	private Uri getOutputMediaFileUri() {
-//		File f = getOutputMediaFile();
 		String timeStamp = new SimpleDateFormat(
 				"yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-		File f = FileUtil.createFile( FileUtil.getPicturesStorageDir(""),
-//				FileUtil.getStorageDir(FileUtil.APPLICATION_DIR1),
+		File f = FileUtil.createFile(FileUtil.getPicturesStorageDir(""),
 				"IMG_"+ timeStamp + ".jpeg");
 		if (f != null) {
 			return Uri.fromFile(f);
@@ -135,79 +126,32 @@ public class GalleryActivity extends AppCompatActivity {
 			return null;
 		}
 	}
-//
-//	/**
-//	 * Создать файл в который будет сохранено изображение.
-//	 * @return Файл.
-//	 */
-//	private File getOutputMediaFile() {
-//		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//
-//			File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-//					Environment.DIRECTORY_PICTURES), IMAGES_FOLDER_NAME);
-//			// Create the storage directory if it does not exist
-//			if (!mediaStorageDir.exists()){
-//				if (!mediaStorageDir.mkdirs()){
-////					UIUtil.showToast(MenuBase.this, R.string.menubase_failed_create_directory);
-////					TODO:fix massage
-//					Log.e(LOG_TAG, "Failed to create folder");
-//					return null;
-//				}
-//			}
-//			// Create a media file name
-//			String timeStamp = new SimpleDateFormat(
-//					"yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-//			return new File(mediaStorageDir.getPath() + File.separator +
-//					"IMG_"+ timeStamp + ".png");
-//		} else {
-//			return null;
-//		}
-//	}
 
-//	/**
-//	 * Write image info to local db
-//	 * @param title image title.
-//	 * @param path image file location.
-//	 * @return id of created record.
-//	 */
-//	private long insertImage(String title, String path) {
-//		SQLiteHelper helper = SQLiteHelper.getInstance(getApplicationContext());
-//		SQLiteDatabase db = helper.getWritableDatabase();
-//		ContentValues values = new ContentValues();
-//		values.put(ImagesTable.COLUMN_TITLE, title);
-//		values.put(ImagesTable.COLUMN_IMG_LOCATION, path);
-//		return db.insert(ImagesTable.TABLE_NAME, null, values);
-//	}
+	/**
+	 * Ask permission write files into file system.
+	 */
+	private void requestWritePermission() {
+		if (ActivityCompat.shouldShowRequestPermissionRationale(
+					GalleryActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+			ActivityCompat.requestPermissions(
+					GalleryActivity.this,
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+					REQUEST_WRITE_PERMISSION
+			);
+		} else {
+			startActivityForResult(new Intent(this, CameraActivity.class), REQUEST_CODE_MAKE_PHOTO);
+		}
+	}
 
-//	/**
-//	 * Сохранить изображение в папку изображений приложения.
-//	 * @param imageName Название изображения в файловой системе устройства.
-//	 * @param image Изображение для сохранения.
-//	 * @return Признак успешного выполнения.
-//	 */
-//	public String saveImageIntoAppDir(String imageName, Bitmap image) {
-//		if (image != null) {
-//			try {
-//				File path = FileUtil.getStorageDir(FileUtil.getAppImagesDir());
-//				if (path != null && !StrUtil.empty(imageName)) {
-//					File imageFile = FileUtil.createFile(path, imageName);
-//					if (imageFile != null) {
-//						if (FileUtil.writeImage(imageFile, image)) {
-//							LOGD(LOG_TAG, "Image saved: " + imageFile.getAbsolutePath());
-//							return imageFile.getAbsolutePath();
-//						}
-//					}
-//					if (imageFile != null && imageFile.exists()) {
-//						imageFile.delete();
-//					}
-//				}
-//			} catch (Exception e) {
-//				LOGE(LOG_TAG, "", e);
-//			}
-//		}
-//		LOGE(LOG_TAG, "Не удалось записать изображение.");
-//		return null;
-//	}
-
-
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+														@NonNull int[] grantResults) {
+		if (requestCode == REQUEST_WRITE_PERMISSION) {
+			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				startActivityForResult(new Intent(this, CameraActivity.class), REQUEST_CODE_MAKE_PHOTO);
+			}
+		} else {
+			super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		}
+	}
 }

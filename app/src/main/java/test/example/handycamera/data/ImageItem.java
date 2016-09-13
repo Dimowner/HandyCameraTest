@@ -85,7 +85,6 @@ public class ImageItem implements Parcelable {
 	public String toString() {
 		return "ImageItem[ id = " + mId
 				+ ", title = " + mTitle
-				+ ", path = " + mPath
-				+ ", img is null = " + (mImg == null) + "];";
+				+ ", path = " + mPath + "];";
 	}
 }

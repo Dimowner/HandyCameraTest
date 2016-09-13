@@ -10,18 +10,6 @@ import android.util.Log;
  */
 public class ImagesTable {
 
-	public static void onCreate(SQLiteDatabase database) {
-		database.execSQL(DATABASE_CREATE_IMAGES_TABLE_SCRIPT);
-	}
-
-	public static void onUpgrade(SQLiteDatabase database, int oldVersion,
-										  int newVersion) {
-		Log.d(LOG_TAG, "Upgrading database from version "
-				+ oldVersion + " to " + newVersion
-				+ ", which will destroy all old data");
-		database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-	}
-
 	/** Table name */
 	public static final String TABLE_NAME = "images";
 
@@ -39,4 +27,17 @@ public class ImagesTable {
 
 	/** Tag for logging information. */
 	private static final String LOG_TAG = "ImagesTable";
+
+
+	public static void onCreate(SQLiteDatabase database) {
+		database.execSQL(DATABASE_CREATE_IMAGES_TABLE_SCRIPT);
+	}
+
+	public static void onUpgrade(SQLiteDatabase database, int oldVersion,
+										  int newVersion) {
+		Log.d(LOG_TAG, "Upgrading database from version "
+				+ oldVersion + " to " + newVersion
+				+ ", which will destroy all old data");
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+	}
 }

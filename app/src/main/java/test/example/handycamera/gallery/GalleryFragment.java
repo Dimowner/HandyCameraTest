@@ -76,14 +76,14 @@ public class GalleryFragment extends Fragment
 			public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
 				Log.v("Fragment", "onItemClick pos = " + pos);
 				Intent intent = new Intent(getContext(), ImagePreviewActivity.class);
-				intent.putExtra(ImageItem.EXTRAS_KEY_IMAGE, mAdapter.getItem(pos));
+				intent.putExtra(ImageItem.EXTRAS_KEY_IMAGE, mAdapter.getItem(pos).getId());
 				startActivity(intent);
 			}
 		});
 
 		mRecyclerView.setAdapter(mAdapter);
 
-		// создаем лоадер для чтения данных
+		// Create loader for reading data
 		getActivity().getSupportLoaderManager().initLoader(0, null, this);
 	}
 

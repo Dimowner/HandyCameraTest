@@ -1,7 +1,6 @@
 package test.example.handycamera.gallery;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +76,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 	}
 
 	public void addItems(List<ImageItem> items) {
-		Log.v("GridAdapter", "addItems");
 		data.addAll(items);
 		notifyDataSetChanged();
 	}
@@ -99,8 +97,4 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 	protected List<ImageItem> data;
 
 	protected AdapterView.OnItemClickListener itemClickListener;
-
-//	public interface OnItemClickListener {
-//		void onItemClick(View view, int position);
-//	}
 }

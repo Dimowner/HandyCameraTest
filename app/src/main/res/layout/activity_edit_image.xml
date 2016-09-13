@@ -50,6 +50,7 @@
 				android:layout_height="wrap_content"
 				android:inputType="text"
 				android:textColor="@android:color/white"
+				android:selectAllOnFocus="true"
 				android:hint="Title"/>
 			<!--TODO: add string-->
 		</android.support.design.widget.TextInputLayout>

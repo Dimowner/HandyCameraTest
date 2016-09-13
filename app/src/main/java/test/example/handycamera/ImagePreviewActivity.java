@@ -1,8 +1,15 @@
 package test.example.handycamera;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,8 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import java.util.List;
+
 import test.example.handycamera.data.ImageItem;
 import test.example.handycamera.data.ImagesDataSource;
+import test.example.handycamera.data.ImagesLoader;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
@@ -19,7 +29,11 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * Created on 11.09.2016.
  * @author Dimowner
  */
-public class ImagePreviewActivity extends AppCompatActivity {
+public class ImagePreviewActivity extends AppCompatActivity
+			implements LoaderManager.LoaderCallbacks<List<ImageItem>> {
+
+	/** Tag for logging information. */
+	private final String LOG_TAG = "ImagePreviewActivity";
 
 	public static final int REQUEST_CODE_EDIT = 1;
 
@@ -27,7 +41,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
 	private PhotoViewAttacher mAttacher;
 
-	private ImageItem mImage;
+	private long mImageId = ImageItem.NO_ID;
 
 
 	@Override
@@ -45,8 +59,12 @@ public class ImagePreviewActivity extends AppCompatActivity {
 		mAttacher = new PhotoViewAttacher(mImageView);
 
 		if (savedInstanceState == null) {
-			buildActivity(getIntent());
+//			buildActivity(getIntent());
+			mImageId = getIntent().getLongExtra(ImageItem.EXTRAS_KEY_IMAGE, ImageItem.NO_ID);
 		}
+
+		// Create loader for reading data
+		this.getSupportLoaderManager().initLoader(1, null, this);
 ////		ImageItem img;
 //		if (getIntent().hasExtra(GalleryFragment.EXTRAS_KEY_IMAGE)) {
 //			mImage = getIntent().getParcelableExtra(GalleryFragment.EXTRAS_KEY_IMAGE);
@@ -66,28 +84,30 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
 	}
 
-	private void buildActivity(Intent data) {
-		if (data.hasExtra(ImageItem.EXTRAS_KEY_IMAGE)) {
-			mImage = data.getParcelableExtra(ImageItem.EXTRAS_KEY_IMAGE);
-			mImageView.setImageBitmap(mImage.getImg());
-			Log.v("ImagePreviewActivity", mImage.toString());
-			getSupportActionBar().setTitle(mImage.getTitle());
-		} else {
-			Log.v("ImagePreviewActivity", "mImage is null");
-			mImage = null;
-		}
-	}
+//	private void buildActivity(Intent data) {
+//		if (data.hasExtra(ImageItem.EXTRAS_KEY_IMAGE)) {
+//			long id = data.getLongExtra(ImageItem.EXTRAS_KEY_IMAGE, ImageItem.NO_ID);
+//			new LoadImageTask()
+////			mImage = data.getParcelableExtra(ImageItem.EXTRAS_KEY_IMAGE);
+////			mImageView.setImageBitmap(mImage.getImg());
+//			Log.v("ImagePreviewActivity", mImage.toString());
+//			getSupportActionBar().setTitle(mImage.getTitle());
+//		} else {
+//			Log.v("ImagePreviewActivity", "mImage is null");
+//			mImage = null;
+//		}
+//	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putParcelable(ImageItem.EXTRAS_KEY_IMAGE, mImage);
+		outState.putLong(ImageItem.EXTRAS_KEY_IMAGE, mImageId);
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		mImage = savedInstanceState.getParcelable(ImageItem.EXTRAS_KEY_IMAGE);
+		mImageId = savedInstanceState.getLong(ImageItem.EXTRAS_KEY_IMAGE);
 	}
 
 	@Override
@@ -109,16 +129,25 @@ public class ImagePreviewActivity extends AppCompatActivity {
 				finish();
 				return true;
 			case R.id.action_delete:
-				//TODO: delete mImage from device and database!
-				//TODO: Async deletion;
-//				ImagesDataSource dataSource = ImagesDataSource.getInstance(getApplicationContext());
-//				dataSource.deleteImage(mImage.getId());
-				new DeleteImageTask().execute(mImage.getId());
-
+				AlertDialog.Builder builder = new AlertDialog.Builder(ImagePreviewActivity.this);
+//				TODO: fix string
+				builder.setTitle("Warning");
+				builder.setMessage("Accept image deletion");
+				builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						new DeleteImageTask().execute(mImageId);
+					}
+				});
+				builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+				builder.create().show();
 				return true;
 			case R.id.action_edit:
 				Intent intent = new Intent(getApplicationContext(), ImageEditActivity.class);
-				intent.putExtra(ImageItem.EXTRAS_KEY_IMAGE, mImage);
+				intent.putExtra(ImageItem.EXTRAS_KEY_IMAGE, mImageId);
 				startActivityForResult(intent, REQUEST_CODE_EDIT);
 				return true;
 			default:
@@ -132,9 +161,29 @@ public class ImagePreviewActivity extends AppCompatActivity {
 		Log.v("ImagePreview", "onACtivityResult reqCode = " + requestCode + " resultCode= " + resultCode);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == REQUEST_CODE_EDIT) {
-				buildActivity(data);
+//				buildActivity(data);
+				//TODO: refresh image;
 			}
 		}
+	}
+
+	@Override
+	public Loader<List<ImageItem>> onCreateLoader(int id, Bundle args) {
+		Log.v(LOG_TAG, "onCreateLoader");
+		return new ImagesLoader(getApplicationContext(),
+				ImagesDataSource.getInstance(getApplicationContext()), mImageId);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<ImageItem>> loader, List<ImageItem> data) {
+		Log.v(LOG_TAG, "onFinishLoad size = " + data.size());
+		mImageView.setImageBitmap(data.get(0).getImg());
+		getSupportActionBar().setTitle(data.get(0).getTitle());
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<ImageItem>> loader) {
+		Log.v(LOG_TAG, "onLoaderReset");
 	}
 
 	public class DeleteImageTask extends AsyncTask<Long, Void, Void> {
@@ -146,9 +195,51 @@ public class ImagePreviewActivity extends AppCompatActivity {
 		}
 
 		@Override
-		protected void onPreExecute() {
+		protected void onPostExecute(Void v) {
 			super.onPreExecute();
 			finish();
 		}
 	}
+
+//	/**
+//	 * Shows OK/Cancel confirmation dialog about image deletion.
+//	 */
+//	public static class ConfirmationDialog extends DialogFragment {
+//
+//
+//		public void setId(long id) {
+//			this.id = id;
+//		}
+//
+//		@Override
+//		public Dialog onCreateDialog(Bundle savedInstanceState) {
+//			final Fragment parent = getParentFragment();
+//			return new AlertDialog.Builder(getActivity())
+////					TODO:fix str
+//					.setMessage("do yo want deleta image?")
+//					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//						@Override
+//						public void onClick(DialogInterface dialog, int which) {
+//							new DeleteImageTask().execute(id)
+////							FragmentCompat.requestPermissions(parent,
+////									new String[]{Manifest.permission.CAMERA},
+////									REQUEST_CAMERA_PERMISSION);
+//						}
+//					})
+//					.setNegativeButton(android.R.string.cancel,
+//							new DialogInterface.OnClickListener() {
+//								@Override
+//								public void onClick(DialogInterface dialog, int which) {
+//									dismiss();
+////									Activity activity = parent.getActivity();
+////									if (activity != null) {
+////										activity.finish();
+////									}
+//								}
+//							})
+//					.create();
+//		}
+//
+//		private final long id;
+//	}
 }

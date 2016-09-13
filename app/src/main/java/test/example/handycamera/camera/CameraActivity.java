@@ -17,7 +17,7 @@ public class CameraActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_camera);
 		if (null == savedInstanceState) {
 			getFragmentManager().beginTransaction()
-					.replace(R.id.container, Camera2BasicFragment.newInstance())
+					.replace(R.id.container, Camera2Fragment.newInstance())
 					.commit();
 		}
 	}

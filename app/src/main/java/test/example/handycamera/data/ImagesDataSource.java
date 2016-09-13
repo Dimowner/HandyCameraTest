@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -16,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import test.example.handycamera.gallery.GalleryFragment;
 import test.example.handycamera.util.FileUtil;
 
 /**
@@ -123,11 +123,14 @@ public class ImagesDataSource {
 	}
 
 	private Bitmap loadBitmap(String path) {
-//		BitmapFactory.Options options = new BitmapFactory.Options();
-//		options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-		Bitmap bitmap = FileUtil.readBitmap(path);//BitmapFactory.decodeFile(path, options);
-		Log.v(LOG_TAG, "loadBitmap bitmap is null = " + (bitmap == null));
-		return bitmap;
+		try {
+			Bitmap bitmap = FileUtil.readBitmapFromFile(path);
+			Log.v(LOG_TAG, "loadBitmap bitmap is null = " + (bitmap == null));
+			return bitmap;
+		} catch (OutOfMemoryError e) {
+			Log.e(LOG_TAG, "", e);
+		}
+		return null;
 	}
 
 	private String saveBitmap(Bitmap bitmap) {

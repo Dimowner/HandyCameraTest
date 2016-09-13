@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,16 +18,31 @@ public class ImagesLoader extends AsyncTaskLoader<List<ImageItem>>
 
 	private ImagesDataSource mDataSource;
 
+	private long imageID = ImageItem.NO_ID;
+
 	public ImagesLoader(Context context, @NonNull ImagesDataSource dataSource) {
 		super(context);
 		Log.v("ImagesLoader", "iMageLoade");
 		mDataSource = dataSource;
 	}
 
+	public ImagesLoader(Context context, @NonNull ImagesDataSource dataSource, long imageID) {
+		super(context);
+		Log.v("ImagesLoader", "iMageLoade");
+		mDataSource = dataSource;
+		this.imageID = imageID;
+	}
+
 	@Override
 	public List<ImageItem> loadInBackground() {
 		Log.v("ImagesLoader", "loadInbackground");
-		return mDataSource.getImages();
+		if (imageID == ImageItem.NO_ID) {
+			return mDataSource.getImages();
+		} else {
+			List<ImageItem> list = new ArrayList<>();
+			list.add(mDataSource.getImage(imageID));
+			return list;
+		}
 	}
 
 	@Override

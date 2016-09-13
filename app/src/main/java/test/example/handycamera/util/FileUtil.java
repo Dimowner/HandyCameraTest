@@ -1,10 +1,13 @@
 package test.example.handycamera.util;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.renderscript.Script;
 import android.util.Log;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,7 +76,7 @@ public class FileUtil {
 		}
 		try {
 			FileOutputStream fos = new FileOutputStream(file);
-			if (bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos)) {
+			if (bitmap.compress(Bitmap.CompressFormat.JPEG, 40, fos)) {
 				fos.close();
 				return true;
 			}
@@ -139,14 +142,63 @@ public class FileUtil {
 	}
 
 	/**
-	 * Загрузить {@link Bitmap} из файловой системы.
-	 * @param path Путь к файлу.
-	 * @return {@link Bitmap} считаный файл.
+	 * Read {@link Bitmap} from file system.
+	 * @param path Path to file.
+	 * @return {@link Bitmap}.
 	 */
-	public static Bitmap readBitmap(String path) {
+	public static Bitmap readBitmapFromFile(String path) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+		options.inPreferredConfig = Bitmap.Config.RGB_565;
 		return BitmapFactory.decodeFile(path, options);
+	}
+
+	/**
+	 * Read {@link Bitmap} from file system.
+	 * @param path Path to file.
+	 * @return {@link Bitmap}.
+	 */
+	public static Bitmap readBitmapFromFile(String path, int reqWidth, int reqHeight) {
+
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+
+		// Calculate inSampleSize
+		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		try {
+			FileInputStream inputStream = new FileInputStream(new File(path));
+			return BitmapFactory.decodeStream(inputStream);
+		} catch (FileNotFoundException e) {
+			Log.e(LOG_TAG, "", e);
+		}
+
+
+		return null;//BitmapFactory.decodeFile(path, options);
+
+	}
+
+	public static int calculateInSampleSize(
+			BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) >= reqHeight
+					&& (halfWidth / inSampleSize) >= reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+
+		return inSampleSize;
 	}
 
 	/**
