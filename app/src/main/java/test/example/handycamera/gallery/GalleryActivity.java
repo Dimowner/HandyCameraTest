@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -31,9 +30,7 @@ public class GalleryActivity extends AppCompatActivity {
 
 	private static final int REQUEST_WRITE_PERMISSION = 2;
 
-	public static final String IMAGES_FOLDER_NAME = "HandyCamera";
-
-	/** Ссылка на изображение в формате Uri */
+	/** Link to image */
 	protected Uri imageUri = null;
 
 	/** Tag for logging information. */
@@ -58,9 +55,7 @@ public class GalleryActivity extends AppCompatActivity {
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-//				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//						.setAction("Action", null).show();
-			makePhoto();
+				makePhoto();
 			}
 		});
 	}
@@ -76,17 +71,15 @@ public class GalleryActivity extends AppCompatActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.v(LOG_TAG, "onACtivityResult reqCode = " + requestCode + " resultCode= " + resultCode);
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 				case REQUEST_CODE_MAKE_PHOTO:
 					//Open edit ImageEditActivity with camera results.
 					Intent intent = new Intent(getApplicationContext(), ImageEditActivity.class);
 					if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-
-						String str = data.getStringExtra(MediaStore.EXTRA_OUTPUT);
-						Log.v(LOG_TAG, "cameraResults = " + str);
-						intent.putExtra(MediaStore.EXTRA_OUTPUT, data.getStringExtra(MediaStore.EXTRA_OUTPUT));
+						intent.putExtra(
+								MediaStore.EXTRA_OUTPUT,
+								data.getStringExtra(MediaStore.EXTRA_OUTPUT));
 					} else {
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri.getPath());
 					}
@@ -109,7 +102,6 @@ public class GalleryActivity extends AppCompatActivity {
 				!= PackageManager.PERMISSION_GRANTED) {
 			requestWritePermission();
 		} else {
-			Log.v(LOG_TAG, "Has permission");
 			startActivityForResult(new Intent(this, CameraActivity.class), REQUEST_CODE_MAKE_PHOTO);
 		}
 	}
@@ -134,16 +126,11 @@ public class GalleryActivity extends AppCompatActivity {
 	 * Ask permission write files into file system.
 	 */
 	private void requestWritePermission() {
-		if (ActivityCompat.shouldShowRequestPermissionRationale(
-					GalleryActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-			ActivityCompat.requestPermissions(
-					GalleryActivity.this,
-					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-					REQUEST_WRITE_PERMISSION
-			);
-		} else {
-			startActivityForResult(new Intent(this, CameraActivity.class), REQUEST_CODE_MAKE_PHOTO);
-		}
+		ActivityCompat.requestPermissions(
+				GalleryActivity.this,
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				REQUEST_WRITE_PERMISSION
+		);
 	}
 
 	@Override

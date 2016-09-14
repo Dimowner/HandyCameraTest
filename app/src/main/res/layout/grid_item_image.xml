@@ -14,13 +14,26 @@
 		android:scaleType="centerCrop"
 		android:layout_gravity="center_vertical|center_horizontal"/>
 
-	<TextView
+	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:singleLine="true"
 		android:layout_gravity="bottom"
 		android:padding="@dimen/keyline_1_minus_8dp"
-		android:textColor="@android:color/holo_red_dark"
-		android:id="@+id/grid_item_title"/>
-
+		android:orientation="vertical">
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:singleLine="true"
+			android:textColor="@color/cyan"
+			android:textStyle="bold"
+			android:textSize="14sp"
+			android:id="@+id/grid_item_title"/>
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:singleLine="true"
+			android:textSize="12sp"
+			android:textColor="@color/cyan"
+			android:id="@+id/grid_item_date"/>
+	</LinearLayout>
 </FrameLayout>

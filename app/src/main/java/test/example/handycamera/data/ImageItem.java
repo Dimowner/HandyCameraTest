@@ -4,6 +4,11 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created on 11.09.2016.
  * @author Dimowner
@@ -11,27 +16,34 @@ import android.os.Parcelable;
 public class ImageItem implements Parcelable {
 
 	public static final String EXTRAS_KEY_IMAGE = "image_item";
-
+	public static final DateFormat DATE_FORMAT
+					= new SimpleDateFormat("MM.dd.yyyy", Locale.getDefault());
 	public static long NO_ID = -1;
 
 	private long mId;
 	private String mTitle;
+	private Date mDate;
 	private String mPath;
 	private Bitmap mImg;
 
 
-	public ImageItem(long mId, String mTitle, String mPath, Bitmap mImg) {
-		if (mId >= 0 || mId == NO_ID) {
-			this.mId = mId;
+	public ImageItem(long id, String title, Date date, String path, Bitmap img) {
+		if (id >= 0 || id == NO_ID) {
+			this.mId = id;
 		}
-		this.mTitle = mTitle;
-		this.mPath = mPath;
-		this.mImg = mImg;
+		this.mDate = date;
+		this.mTitle = title;
+		this.mPath = path;
+		this.mImg = img;
 	}
 
 	//----- START Parcelable implementation ----------
 	public ImageItem(Parcel in) {
-		this.mId = in.readLong();
+		long[] l = new long[2];
+		in.readLongArray(l);
+		mId = l[0];
+		mDate = new Date(l[1]);
+
 		String[] data = new String[2];
 		in.readStringArray(data);
 		mTitle = data[0];
@@ -44,7 +56,7 @@ public class ImageItem implements Parcelable {
 	}
 
 	public void writeToParcel(Parcel out, int flags) {
-		out.writeLong(mId);
+		out.writeLongArray(new long[] {mId, mDate.getTime()});
 		out.writeStringArray(new String[] {mTitle, mPath});
 		out.writeParcelable(mImg, PARCELABLE_WRITE_RETURN_VALUE);
 	}
@@ -69,8 +81,20 @@ public class ImageItem implements Parcelable {
 		return mTitle;
 	}
 
-	public void setmTitle(String mTitle) {
-		this.mTitle = mTitle;
+	public void setTitle(String title) {
+		this.mTitle = title;
+	}
+
+	public Date getDate() {
+		return mDate;
+	}
+
+	public String getFormattedDate() {
+		return DATE_FORMAT.format(mDate);
+	}
+
+	public long getDateMills() {
+		return mDate.getTime();
 	}
 
 	public String getPath() {
@@ -85,6 +109,7 @@ public class ImageItem implements Parcelable {
 	public String toString() {
 		return "ImageItem[ id = " + mId
 				+ ", title = " + mTitle
+				+ ", date = " + DATE_FORMAT.format(mDate)
 				+ ", path = " + mPath + "];";
 	}
 }

@@ -16,6 +16,7 @@ public class ImagesTable {
 	/** Table fields names */
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_TITLE = "title";
+	public static final String COLUMN_DATE = "date";
 	public static final String COLUMN_IMG_LOCATION = "img_location";
 
 	/** Creation script for table Images. */
@@ -23,6 +24,7 @@ public class ImagesTable {
 			"CREATE TABLE " + TABLE_NAME + " ("
 					+ COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 					+ COLUMN_TITLE + " TEXT NOT NULL, "
+					+ COLUMN_DATE + " INTEGER NOT NULL, "
 					+ COLUMN_IMG_LOCATION + " TEXT NOT NULL);";
 
 	/** Tag for logging information. */

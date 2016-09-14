@@ -11,14 +11,22 @@ import test.example.handycamera.R;
  */
 public class CameraActivity extends AppCompatActivity {
 
+	private Camera2Fragment fragment;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
 		if (null == savedInstanceState) {
+			fragment = Camera2Fragment.newInstance();
 			getFragmentManager().beginTransaction()
-					.replace(R.id.container, Camera2Fragment.newInstance())
+					.replace(R.id.container, fragment)
 					.commit();
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		fragment.removeSavedImage();
 	}
 }

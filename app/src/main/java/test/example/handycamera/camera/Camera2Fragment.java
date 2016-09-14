@@ -852,7 +852,7 @@ public class Camera2Fragment extends Fragment
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("Saved: " + mFile);
+//                    showToast("Saved: " + mFile);
                     Log.d(TAG, mFile.toString());
                     unlockFocus();
                 }
@@ -914,10 +914,13 @@ public class Camera2Fragment extends Fragment
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mFile.getPath());
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().finish();
-//              TODO: record all images and delete unused on close
                 break;
             }
         }
+    }
+
+    public void removeSavedImage() {
+        FileUtil.deleteRecursivelyDirs(mFile);
     }
 
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {

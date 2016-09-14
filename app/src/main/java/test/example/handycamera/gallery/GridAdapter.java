@@ -20,6 +20,11 @@ import test.example.handycamera.data.ImageItem;
  */
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 
+	private List<ImageItem> data;
+
+	private AdapterView.OnItemClickListener itemClickListener;
+
+
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		public ViewHolder(View v) {
 			super(v);
@@ -59,9 +64,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 			}
 		});
 		TextView tvTitle = (TextView) holder.mView.findViewById(R.id.grid_item_title);
+		TextView tvDate = (TextView) holder.mView.findViewById(R.id.grid_item_date);
 		ImageView ivImg = (ImageView) holder.mView.findViewById(R.id.grid_item_img);
 
 		tvTitle.setText(img.getTitle());
+		tvDate.setText(img.getFormattedDate());
 		ivImg.setImageBitmap(img.getImg());
 	}
 
@@ -80,6 +87,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 		notifyDataSetChanged();
 	}
 
+	public void setData(List<ImageItem> items) {
+		data = items;
+		notifyDataSetChanged();
+	}
+
 	public ImageItem getItem(int pos) {
 		return data.get(pos);
 	}
@@ -92,9 +104,4 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 	public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
 		itemClickListener = listener;
 	}
-
-
-	protected List<ImageItem> data;
-
-	protected AdapterView.OnItemClickListener itemClickListener;
 }

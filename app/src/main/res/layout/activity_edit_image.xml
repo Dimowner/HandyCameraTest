@@ -16,9 +16,6 @@
 		<include layout="@layout/toolbar_actionbar"/>
 	</android.support.design.widget.AppBarLayout>
 
-	<!--<ScrollView-->
-		<!--android:layout_width="match_parent"-->
-		<!--android:layout_height="match_parent">-->
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -51,10 +48,8 @@
 				android:inputType="text"
 				android:textColor="@android:color/white"
 				android:selectAllOnFocus="true"
-				android:hint="Title"/>
-			<!--TODO: add string-->
+				android:hint="@string/image_edit_title_hint"/>
 		</android.support.design.widget.TextInputLayout>
 
 	</LinearLayout>
-	<!--</ScrollView>-->
 </android.support.design.widget.CoordinatorLayout>

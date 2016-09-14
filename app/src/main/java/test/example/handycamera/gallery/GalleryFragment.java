@@ -1,8 +1,6 @@
 package test.example.handycamera.gallery;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -16,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import test.example.handycamera.ImagePreviewActivity;
@@ -35,10 +32,7 @@ public class GalleryFragment extends Fragment
 	/** Tag for logging information. */
 	private final String LOG_TAG = "GalleryFragment";
 
-	public static final int DEFAULT_ITEM_WIDTH = 120;
-
-	/** Grid recycler view. */
-	private RecyclerView mRecyclerView;
+	public static final int DEFAULT_ITEM_WIDTH = 120;//px
 
 	private GridAdapter mAdapter;
 
@@ -55,7 +49,7 @@ public class GalleryFragment extends Fragment
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+		RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 		float dp = TypedValue.applyDimension(
@@ -63,18 +57,10 @@ public class GalleryFragment extends Fragment
 		mRecyclerView.setLayoutManager(
 				new GridAutofitLayoutManager(getContext(), (int)(DEFAULT_ITEM_WIDTH * dp)));
 
-//		ArrayList<ImageItem> items = new ArrayList<>();
-
-//		for (int i = 0; i < 30; i++) {
-//			Bitmap b = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_handy_camera);
-//			items.add(new ImageItem(i, "Title " + i, "path", b));
-//		}
-
 		mAdapter = new GridAdapter(null);
 		mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-				Log.v("Fragment", "onItemClick pos = " + pos);
 				Intent intent = new Intent(getContext(), ImagePreviewActivity.class);
 				intent.putExtra(ImageItem.EXTRAS_KEY_IMAGE, mAdapter.getItem(pos).getId());
 				startActivity(intent);
@@ -89,22 +75,27 @@ public class GalleryFragment extends Fragment
 
 	@Override
 	public Loader<List<ImageItem>> onCreateLoader(int id, Bundle args) {
-		Log.v(LOG_TAG, "onCreateLoader");
-		return new ImagesLoader(getContext(), ImagesDataSource.getInstance(getContext()));
+		float dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1,
+				getResources().getDisplayMetrics());
+		int size = (int)(DEFAULT_ITEM_WIDTH * dp);
+
+		ImagesDataSource ds = ImagesDataSource.getInstance(getContext());
+		ds.setHeight(size);
+		ds.setWidth(size);
+
+		return new ImagesLoader(getContext(), ds);
 	}
 
 	@Override
 	public void onLoadFinished(Loader<List<ImageItem>> loader, List<ImageItem> data) {
-		Log.v(LOG_TAG, "onFinishLoad");
 		if (data == null) {
 			Log.e(LOG_TAG, "Failed to load images");
 		} else {
-			mAdapter.addItems(data);
+			mAdapter.setData(data);
 		}
 	}
 
 	@Override
 	public void onLoaderReset(Loader<List<ImageItem>> loader) {
-		Log.v(LOG_TAG, "onLoaderReset");
 	}
 }
