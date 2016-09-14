@@ -37,7 +37,7 @@ public class ImageEditActivity extends AppCompatActivity
 
 	private ImageView mImageView;
 
-	private long mImageId;
+	private long mImageId = ImageItem.NO_ID;
 
 	private ImageItem mImage;
 
@@ -113,15 +113,21 @@ public class ImageEditActivity extends AppCompatActivity
 	@Override
 	public Loader<List<ImageItem>> onCreateLoader(int id, Bundle args) {
 		Log.v(LOG_TAG, "onCreateLoader");
-		return new ImagesLoader(getApplicationContext(),
-				ImagesDataSource.getInstance(getApplicationContext()), mImageId);
+		if (mImageId != ImageItem.NO_ID) {
+			return new ImagesLoader(getApplicationContext(),
+					ImagesDataSource.getInstance(getApplicationContext()), mImageId);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public void onLoadFinished(Loader<List<ImageItem>> loader, List<ImageItem> data) {
 		Log.v(LOG_TAG, "onFinishLoad size = " + data.size());
-		mImageView.setImageBitmap(data.get(0).getImg());
-		mEtTitle.setText(data.get(0).getTitle());
+		if (data.size() > 0) {
+			mImageView.setImageBitmap(data.get(0).getImg());
+			mEtTitle.setText(data.get(0).getTitle());
+		}
 	}
 
 	@Override

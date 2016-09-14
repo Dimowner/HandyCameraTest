@@ -83,6 +83,9 @@ public class GalleryActivity extends AppCompatActivity {
 					//Open edit ImageEditActivity with camera results.
 					Intent intent = new Intent(getApplicationContext(), ImageEditActivity.class);
 					if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+
+						String str = data.getStringExtra(MediaStore.EXTRA_OUTPUT);
+						Log.v(LOG_TAG, "cameraResults = " + str);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, data.getStringExtra(MediaStore.EXTRA_OUTPUT));
 					} else {
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri.getPath());

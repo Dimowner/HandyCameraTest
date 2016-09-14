@@ -60,6 +60,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.File;
@@ -75,6 +76,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import test.example.handycamera.R;
+import test.example.handycamera.util.FileUtil;
 
 @TargetApi(21)
 public class Camera2Fragment extends Fragment
@@ -171,6 +173,11 @@ public class Camera2Fragment extends Fragment
      * An {@link AutoFitTextureView} for camera preview.
      */
     private AutoFitTextureView mTextureView;
+
+    /**
+     * Button for accept camera results.
+     */
+    private ImageButton mBtnAccept;
 
     /**
      * A {@link CameraCaptureSession } for camera preview.
@@ -433,14 +440,18 @@ public class Camera2Fragment extends Fragment
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         view.findViewById(R.id.picture).setOnClickListener(this);
-        view.findViewById(R.id.btn_accept).setOnClickListener(this);
+        mBtnAccept = (ImageButton) view.findViewById(R.id.btn_accept);
+        mBtnAccept.setOnClickListener(this);
+
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
+//        mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
+
+        mFile = FileUtil.getNewImageFile();
     }
 
     @Override
@@ -894,20 +905,16 @@ public class Camera2Fragment extends Fragment
         switch (view.getId()) {
             case R.id.picture: {
                 takePicture();
+                mBtnAccept.setVisibility(View.VISIBLE);
                 break;
             }
             case R.id.btn_accept: {
                 Intent intent = new Intent();
+                Log.v("Camera2", "file path=" + mFile.getPath());
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mFile.getPath());
                 getActivity().setResult(Activity.RESULT_OK, intent);
                 getActivity().finish();
-//                Activity activity = getActivity();
-//                if (null != activity) {
-//                    new AlertDialog.Builder(activity)
-//                            .setMessage(R.string.intro_message)
-//                            .setPositiveButton(android.R.string.ok, null)
-//                            .show();
-//                }
+//              TODO: record all images and delete unused on close
                 break;
             }
         }

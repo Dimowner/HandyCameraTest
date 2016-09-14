@@ -1,16 +1,16 @@
 package test.example.handycamera.util;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.renderscript.Script;
 import android.util.Log;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Class for working with files
@@ -153,52 +153,15 @@ public class FileUtil {
 	}
 
 	/**
-	 * Read {@link Bitmap} from file system.
-	 * @param path Path to file.
-	 * @return {@link Bitmap}.
+	 * Create new file for image with generated name.
+	 * @return Created file.
 	 */
-	public static Bitmap readBitmapFromFile(String path, int reqWidth, int reqHeight) {
-
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-
-		// Calculate inSampleSize
-		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-		// Decode bitmap with inSampleSize set
-		options.inJustDecodeBounds = false;
-		try {
-			FileInputStream inputStream = new FileInputStream(new File(path));
-			return BitmapFactory.decodeStream(inputStream);
-		} catch (FileNotFoundException e) {
-			Log.e(LOG_TAG, "", e);
-		}
-
-
-		return null;//BitmapFactory.decodeFile(path, options);
-
-	}
-
-	public static int calculateInSampleSize(
-			BitmapFactory.Options options, int reqWidth, int reqHeight) {
-		// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-
-			final int halfHeight = height / 2;
-			final int halfWidth = width / 2;
-
-			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
-			// height and width larger than the requested height and width.
-			while ((halfHeight / inSampleSize) >= reqHeight
-					&& (halfWidth / inSampleSize) >= reqWidth) {
-				inSampleSize *= 2;
-			}
-		}
-
-		return inSampleSize;
+	public static File getNewImageFile() {
+		String timeStamp = new SimpleDateFormat(
+				"yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+		return FileUtil.createFile(
+				FileUtil.getStorageDir(FileUtil.APPLICATION_DIR),
+				"IMG_"+ timeStamp + ".jpeg");
 	}
 
 	/**

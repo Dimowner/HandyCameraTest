@@ -134,11 +134,12 @@ public class ImagesDataSource {
 	}
 
 	private String saveBitmap(Bitmap bitmap) {
-		String timeStamp = new SimpleDateFormat(
-				"yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-		File file = FileUtil.createFile(
-				FileUtil.getStorageDir(FileUtil.APPLICATION_DIR),
-				"IMG_"+ timeStamp + ".jpeg");
+//		String timeStamp = new SimpleDateFormat(
+//				"yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+//		File file = FileUtil.createFile(
+//				FileUtil.getStorageDir(FileUtil.APPLICATION_DIR),
+//				"IMG_"+ timeStamp + ".jpeg");
+		File file = FileUtil.getNewImageFile();
 		FileUtil.writeImage(file, bitmap);
 		return file.getPath();
 	}
