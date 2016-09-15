@@ -33,9 +33,6 @@ public class GalleryActivity extends AppCompatActivity {
 	/** Link to image */
 	protected Uri imageUri = null;
 
-	/** Tag for logging information. */
-	private final String LOG_TAG = "GalleryActivity";
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,6 +63,18 @@ public class GalleryActivity extends AppCompatActivity {
 		} else{
 			runCameraActivityPreLollipop();
 		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable("image_uri", imageUri);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		imageUri = savedInstanceState.getParcelable("image_uri");
 	}
 
 	@Override
