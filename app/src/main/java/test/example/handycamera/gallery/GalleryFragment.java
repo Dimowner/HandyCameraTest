@@ -52,12 +52,12 @@ public class GalleryFragment extends Fragment
 		RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 		mRecyclerView.setHasFixedSize(true);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-		float dp = TypedValue.applyDimension(
-				TypedValue.COMPLEX_UNIT_DIP, 1, getResources().getDisplayMetrics());
-		mRecyclerView.setLayoutManager(
-				new GridAutofitLayoutManager(getContext(), (int)(DEFAULT_ITEM_WIDTH * dp)));
 
-		mAdapter = new GridAdapter(null);
+		int dpWidth = (int) TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ITEM_WIDTH, getResources().getDisplayMetrics());
+		mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(getContext(), dpWidth));
+
+		mAdapter = new GridAdapter();
 		mAdapter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
@@ -75,13 +75,12 @@ public class GalleryFragment extends Fragment
 
 	@Override
 	public Loader<List<ImageItem>> onCreateLoader(int id, Bundle args) {
-		float dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1,
-				getResources().getDisplayMetrics());
-		int size = (int)(DEFAULT_ITEM_WIDTH * dp);
+		int dpWidth = (int) TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP, DEFAULT_ITEM_WIDTH, getResources().getDisplayMetrics());
 
 		ImagesDataSource ds = ImagesDataSource.getInstance(getContext());
-		ds.setHeight(size);
-		ds.setWidth(size);
+		ds.setHeight(dpWidth);
+		ds.setWidth(dpWidth);
 
 		return new ImagesLoader(getContext(), ds);
 	}

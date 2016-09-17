@@ -12,8 +12,7 @@ import java.util.List;
  * {@link ImagesDataSource} as its source. This Loader is a {@link AsyncTaskLoader} so it queries
  * the data asynchronously.
  */
-public class ImagesLoader extends AsyncTaskLoader<List<ImageItem>>
-			implements ImagesDataSource.ImagesDataSourceObserver {
+public class ImagesLoader extends AsyncTaskLoader<List<ImageItem>> {
 
 	private ImagesDataSource mDataSource;
 
@@ -56,7 +55,6 @@ public class ImagesLoader extends AsyncTaskLoader<List<ImageItem>>
 	@Override
 	protected void onStartLoading() {
 		// Begin monitoring the underlying data source.
-		mDataSource.addContentObserver(this);
 		forceLoad();
 	}
 
@@ -68,13 +66,5 @@ public class ImagesLoader extends AsyncTaskLoader<List<ImageItem>>
 	@Override
 	protected void onReset() {
 		onStopLoading();
-		mDataSource.removeContentObserver(this);
-	}
-
-	@Override
-	public void onTasksChanged() {
-		if (isStarted()) {
-			forceLoad();
-		}
 	}
 }

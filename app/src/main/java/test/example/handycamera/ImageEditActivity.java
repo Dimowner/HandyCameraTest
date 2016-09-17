@@ -182,7 +182,6 @@ public class ImageEditActivity extends AppCompatActivity
 		@Override
 		protected void onPostExecute(Void v) {
 			super.onPostExecute(v);
-			mImage.getImg().recycle();
 			setResult(RESULT_OK);
 			finish();
 		}

@@ -34,6 +34,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
 		public View mView;
 	}
 
+	public GridAdapter() {
+		this.data = new ArrayList<>();
+	}
+
 	public GridAdapter(ArrayList<ImageItem> items) {
 		if (items != null) {
 			this.data = items;

@@ -49,12 +49,9 @@ public class GridAutofitLayoutManager extends GridLayoutManager {
 		int height = getHeight();
 		if (mColumnWidthChanged && mColumnWidth > 0 && width > 0 && height > 0) {
 			int totalSpace;
-			if (getOrientation() == VERTICAL)
-			{
+			if (getOrientation() == VERTICAL) {
 				totalSpace = width - getPaddingRight() - getPaddingLeft();
-			}
-			else
-			{
+			} else {
 				totalSpace = height - getPaddingTop() - getPaddingBottom();
 			}
 			int spanCount = Math.max(1, totalSpace / mColumnWidth);

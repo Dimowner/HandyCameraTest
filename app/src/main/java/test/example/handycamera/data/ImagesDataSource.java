@@ -28,8 +28,6 @@ public class ImagesDataSource {
 
 	private SQLiteDatabase mDb;
 
-	private List<ImagesDataSourceObserver> mObservers = new ArrayList<>();
-
 	/** Tag for logging information. */
 	private final String LOG_TAG = "ImagesDataSource";
 
@@ -146,8 +144,6 @@ public class ImagesDataSource {
 
 			mDb.insert(ImagesTable.TABLE_NAME, null, values);
 
-
-			notifyContentObserver();
 		} catch (IllegalStateException e) {
 			Log.e(LOG_TAG, "", e);
 		}
@@ -169,7 +165,6 @@ public class ImagesDataSource {
 
 			mDb.update(ImagesTable.TABLE_NAME, values, selection, selectionArgs);
 
-			notifyContentObserver();
 		} catch (IllegalStateException e) {
 			Log.e(LOG_TAG, "", e);
 		}
@@ -181,31 +176,8 @@ public class ImagesDataSource {
 			String[] selectionArgs = {String.valueOf(id)};
 
 			mDb.delete(ImagesTable.TABLE_NAME, selection, selectionArgs);
-			notifyContentObserver();
 		} catch (IllegalStateException e) {
 			Log.e(LOG_TAG, "", e);
 		}
-	}
-
-	public void addContentObserver(ImagesDataSourceObserver observer) {
-		if (!mObservers.contains(observer)) {
-			mObservers.add(observer);
-		}
-	}
-
-	public void removeContentObserver(ImagesDataSourceObserver observer) {
-		if (mObservers.contains(observer)) {
-			mObservers.remove(observer);
-		}
-	}
-
-	private void notifyContentObserver() {
-		for (ImagesDataSourceObserver observer : mObservers) {
-			observer.onTasksChanged();
-		}
-	}
-
-	public interface ImagesDataSourceObserver {
-		void onTasksChanged();
 	}
 }

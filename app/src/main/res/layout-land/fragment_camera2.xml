@@ -33,7 +33,7 @@
 		android:layout_alignParentEnd="true"
 		android:layout_alignParentTop="true"
 		android:layout_toRightOf="@id/texture"
-		android:background="?attr/colorPrimary"
+		android:background="?colorPrimary"
 		android:orientation="horizontal">
 
 		<Button
