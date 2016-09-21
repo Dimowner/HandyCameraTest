@@ -1,4 +1,4 @@
-package test.example.handycamera;
+package ua.com.sofon.handycamera;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,10 +18,10 @@ import android.widget.ImageView;
 import java.io.File;
 import java.util.List;
 
-import test.example.handycamera.data.ImageItem;
-import test.example.handycamera.data.ImagesDataSource;
-import test.example.handycamera.data.ImagesLoader;
-import test.example.handycamera.util.FileUtil;
+import ua.com.sofon.handycamera.data.ImageItem;
+import ua.com.sofon.handycamera.data.ImagesDataSource;
+import ua.com.sofon.handycamera.data.ImagesLoader;
+import ua.com.sofon.handycamera.util.FileUtil;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**

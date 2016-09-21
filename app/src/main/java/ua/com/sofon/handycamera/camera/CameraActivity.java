@@ -1,10 +1,10 @@
-package test.example.handycamera.camera;
+package ua.com.sofon.handycamera.camera;
 
 import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import test.example.handycamera.R;
+import ua.com.sofon.handycamera.R;
 
 /**
  * Created on 10.09.2016.

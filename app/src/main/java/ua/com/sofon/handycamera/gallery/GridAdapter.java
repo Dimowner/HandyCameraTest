@@ -1,4 +1,4 @@
-package test.example.handycamera.gallery;
+package ua.com.sofon.handycamera.gallery;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,8 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import test.example.handycamera.R;
-import test.example.handycamera.data.ImageItem;
+import ua.com.sofon.handycamera.R;
+import ua.com.sofon.handycamera.data.ImageItem;
 
 /**
  * Created on 11.09.2016.

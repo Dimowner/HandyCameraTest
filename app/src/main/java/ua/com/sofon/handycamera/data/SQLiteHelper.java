@@ -1,4 +1,4 @@
-package test.example.handycamera.data;
+package ua.com.sofon.handycamera.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.example.handycamera.camera;
+package ua.com.sofon.handycamera.camera;
 
 import android.annotation.TargetApi;
 import android.content.Context;

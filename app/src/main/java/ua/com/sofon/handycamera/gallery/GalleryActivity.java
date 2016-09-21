@@ -1,4 +1,4 @@
-package test.example.handycamera.gallery;
+package ua.com.sofon.handycamera.gallery;
 
 import android.Manifest;
 import android.content.Intent;
@@ -19,10 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import test.example.handycamera.camera.CameraActivity;
-import test.example.handycamera.ImageEditActivity;
-import test.example.handycamera.R;
-import test.example.handycamera.util.FileUtil;
+import ua.com.sofon.handycamera.camera.CameraActivity;
+import ua.com.sofon.handycamera.ImageEditActivity;
+import ua.com.sofon.handycamera.R;
+import ua.com.sofon.handycamera.util.FileUtil;
 
 public class GalleryActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package test.example.handycamera.util;
+package ua.com.sofon.handycamera.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

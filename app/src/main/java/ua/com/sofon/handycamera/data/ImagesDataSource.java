@@ -1,4 +1,4 @@
-package test.example.handycamera.data;
+package ua.com.sofon.handycamera.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import test.example.handycamera.util.FileUtil;
+import ua.com.sofon.handycamera.util.FileUtil;
 
 /**
  * Created on 12.09.2016.

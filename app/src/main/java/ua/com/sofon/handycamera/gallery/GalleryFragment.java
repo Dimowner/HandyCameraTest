@@ -1,4 +1,4 @@
-package test.example.handycamera.gallery;
+package ua.com.sofon.handycamera.gallery;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,11 +16,11 @@ import android.widget.AdapterView;
 
 import java.util.List;
 
-import test.example.handycamera.ImagePreviewActivity;
-import test.example.handycamera.R;
-import test.example.handycamera.data.ImageItem;
-import test.example.handycamera.data.ImagesDataSource;
-import test.example.handycamera.data.ImagesLoader;
+import ua.com.sofon.handycamera.ImagePreviewActivity;
+import ua.com.sofon.handycamera.R;
+import ua.com.sofon.handycamera.data.ImageItem;
+import ua.com.sofon.handycamera.data.ImagesDataSource;
+import ua.com.sofon.handycamera.data.ImagesLoader;
 
 /**
  * Created on 10.09.2016.

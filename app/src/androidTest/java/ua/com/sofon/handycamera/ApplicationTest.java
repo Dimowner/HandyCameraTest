@@ -1,4 +1,4 @@
-package test.example.handycamera;
+package ua.com.sofon.handycamera;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

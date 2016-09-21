@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="test.example.handycamera"
+<manifest package="ua.com.sofon.handycamera"
 			 xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<uses-feature android:name="android.hardware.camera"/>
@@ -16,7 +16,7 @@
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme">
 		<activity
-			android:name=".gallery.GalleryActivity"
+			android:name="ua.com.sofon.handycamera.gallery.GalleryActivity"
 			android:label="@string/activity_gallery">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -25,9 +25,9 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".camera.CameraActivity" android:label="@string/activity_camera"/>
-		<activity android:name=".ImageEditActivity" android:label="@string/activity_editing"/>
-		<activity android:name=".ImagePreviewActivity" android:label="@string/activity_preview"/>
+		<activity android:name="ua.com.sofon.handycamera.camera.CameraActivity" android:label="@string/activity_camera"/>
+		<activity android:name="ua.com.sofon.handycamera.ImageEditActivity" android:label="@string/activity_editing"/>
+		<activity android:name="ua.com.sofon.handycamera.ImagePreviewActivity" android:label="@string/activity_preview"/>
 	</application>
 
 </manifest>

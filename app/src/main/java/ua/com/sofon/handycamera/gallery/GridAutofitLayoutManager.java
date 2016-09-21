@@ -1,4 +1,4 @@
-package test.example.handycamera.gallery;
+package ua.com.sofon.handycamera.gallery;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;

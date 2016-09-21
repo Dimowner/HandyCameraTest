@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test.example.handycamera.camera;
+package ua.com.sofon.handycamera.camera;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -75,8 +75,8 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import test.example.handycamera.R;
-import test.example.handycamera.util.FileUtil;
+import ua.com.sofon.handycamera.R;
+import ua.com.sofon.handycamera.util.FileUtil;
 
 @TargetApi(21)
 public class Camera2Fragment extends Fragment
